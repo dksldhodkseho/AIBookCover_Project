@@ -1,3 +1,119 @@
+# 📖 프론트엔드 & 이미지 생성 기능 요약 (React + OpenAI)
+
+## 📂 프로젝트 구조 요약
+
+```
+📆 src
+ ├ 📁 components       // 재사용 가능한 UI contribute
+ ├ 📁 pages            // 라우트와 매핑되는 주요 페이지
+ ├ 📁 routes           // React Router 설정
+ ├ 📁 services         // API 통신 및 외부 서비스
+ └ 🗾 App.jsx          // 루트 contribute
+
+```
+
+---
+
+## 🌐 Router 구조 요약 (`Router.jsx`)
+
+React Router를 사용한 SPA(Single Page Application) 라우트입니다.
+
+### 📌 주요 라우트
+
+| 건데 | 설명 |
+| --- | --- |
+| `/` → `/login` | 접근 시 로그인 페이지로 redirection |
+| `/home` | 메인 홈 페이지 |
+| `/books` | 전체 도서 목록 |
+| `/books/:id` | 특정 도서 상세 |
+| `/create` | 도서 생성 |
+| `/edit/:id` | 도서 편집 |
+| `/my` | 사용자가 등록한 도서 |
+| `/ai-cover` | AI 커버 이미지 생성 페이지 |
+
+📌 `Navigate`를 사용하여 `/`로 접근 시 `/login`으로 redirection 처리
+
+---
+
+## 🎨 AI 이미지 생성 기능 (`services/imageGenerator.js`)
+
+OpenAI의 DALL·E 모델을 사용해 **텍스트 프롬프트로 커버 이미지를 생성**합니다.
+
+### 🔧 주요 함수
+
+```
+export async function generateImageFromPrompt(apiKey, prompt, model, quality, style, size)
+
+```
+
+| 파라미터 | 설명 |
+| --- | --- |
+| `apiKey` | OpenAI API 키 |
+| `prompt` | 이미지 생성 프론프트 |
+| `model` | 사용 모델 (`dall-e-3`, `dall-e-2`) |
+| `quality` | `standard` or `hd` (dall-e-3 전용) |
+| `style` | `vivid` or `natural` (dall-e-3 전용) |
+| `size` | 이미지 크기 (기본: 1024x1024) |
+
+### ✅ 주요 특징
+
+- `dall-e-3`과 `dall-e-2`의 API 스텝 차이를 반영하여 옵션 동적 설정
+- 응답 데이터가 없거나 오류 시 예외 처리
+- 유효하지 않은 사이즈 요청 시 기본값으로 자동 변경
+
+### 💡 사용 예시
+
+```
+const url = await generateImageFromPrompt(
+  OPENAI_API_KEY,
+  'A fantasy-style magical book cover with dragons and castles'
+);
+
+```
+
+---
+
+## 🔄 전체 데이터 Process 예시
+
+```
+📆 사용자
+   └── [로그인]
+       └── /home → /create
+            └── [프론프트 입력 + generateImageFromPrompt 호출]
+                └── OpenAI API 호출
+                    └── 이미지 URL 반환
+                        └── 커버 이미지 미리보기 및 저장
+
+```
+
+---
+
+## 🧪 예외 처리 및 보완사항
+
+- 이미지 응답 오류 시 `throw new Error(...)`로 예외 발생 → 프롬프트에서 Toast Notification 등 처리 필요
+- API Key는 `.env` 등을 통해 보안 관리 권장
+
+---
+
+## ✅ 향후 계정 아이디어
+
+- 프론프트 추천 기능 추가 (장르 기반 자동 제안)
+- 사용자 생성 이미지 저장 이력 조회 기능
+- 생성 이미지 수정 옵션 (re-roll, 업스케일 등)
+
+---
+
+## 🚀 의존 기술
+
+| 기술 | 설명 |
+| --- | --- |
+| `React` | UI 프레임워크 |
+| `React Router DOM` | SPA 라우트 관리 |
+| `fetch API` | 이미지 생성용 OpenAI API 요청 |
+| `OpenAI DALL·E` | 텍스트-이미지 생성 모델 |
+
+---
+
 ## **BackEnd**
 
 ### 🚦 Controller & Config 요약
